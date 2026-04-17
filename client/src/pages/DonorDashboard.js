@@ -1,7 +1,7 @@
 // client/src/pages/DonorDashboard.js
 import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../services/api";
+import API, { getImageUrl } from "../services/api";
 import { SkeletonGrid, useToast } from "../components/UIComponents";
 
 function DonorDashboard() {
@@ -114,7 +114,7 @@ function DonorDashboard() {
               </p>
               {d.locationImage && (
                 <div style={{ marginTop:"10px" }}>
-                  <img src={`http://localhost:5000/uploads/${d.locationImage}`}
+                  <img src={getImageUrl(d.locationImage)}
                     alt="Location" width="220" style={{ borderRadius:"10px" }} />
                 </div>
               )}

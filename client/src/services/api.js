@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://food-donation-mo9u.onrender.com/api"
+  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api"
 });
 
 API.interceptors.request.use(
@@ -14,5 +14,14 @@ API.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+// Helper function to get image URL from filename
+export const getImageUrl = (filename) => {
+  if (!filename) return null;
+  const baseURL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api";
+  // Remove /api from the end to get server base URL
+  const serverBase = baseURL.replace(/\/api$/, "");
+  return `${serverBase}/uploads/${filename}`;
+};
 
 export default API;
