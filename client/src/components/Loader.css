@@ -137,3 +137,95 @@
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ── RESPONSIVE MEDIA QUERIES ── */
+@media (max-width: 768px) {
+  .loader-wrapper {
+    gap: 24px;
+  }
+
+  .loader {
+    width: 56px;
+    height: 56px;
+  }
+
+  .loader::before,
+  .loader::after {
+    border-width: 3px;
+  }
+
+  .loader::after {
+    inset: 8px;
+  }
+
+  .loader-brand {
+    font-size: 1.3rem;
+  }
+
+  .loader-dots span {
+    width: 7px;
+    height: 7px;
+  }
+
+  .loader-wrapper p {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loader-wrapper {
+    gap: 20px;
+  }
+
+  .loader {
+    width: 48px;
+    height: 48px;
+  }
+
+  .loader::before,
+  .loader::after {
+    border-width: 3px;
+  }
+
+  .loader::after {
+    inset: 7px;
+  }
+
+  .loader-brand {
+    font-size: 1.1rem;
+  }
+
+  .loader-dots {
+    gap: 6px;
+  }
+
+  .loader-dots span {
+    width: 6px;
+    height: 6px;
+  }
+
+  .loader-wrapper p {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (max-width: 360px) {
+  .loader-wrapper {
+    gap: 16px;
+  }
+
+  .loader {
+    width: 40px;
+    height: 40px;
+  }
+
+  .loader-brand {
+    font-size: 1rem;
+  }
+
+  .loader-dots span {
+    width: 5px;
+    height: 5px;
+  }
+}

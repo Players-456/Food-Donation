@@ -1,5 +1,6 @@
 // client/src/components/Navbar.js
 
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
@@ -38,8 +39,24 @@ function NavLink({ to, children, color }) {
   );
 }
 
+// ── Mobile Menu Link ───────────────────────────────────────
+function MobileMenuLink({ to, children, color, onClick, className }) {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+  return (
+    <Link to={to} style={{ textDecoration: "none" }} onClick={onClick}>
+      <div className={`mobile-menu-link ${isActive ? 'active' : ''}`} style={{
+        color: isActive ? "#ff6b2b" : (color || "inherit"),
+      }}>
+        {children}
+      </div>
+    </Link>
+  );
+}
+
 // ── Navbar ────────────────────────────────────────────────
 function Navbar({ theme, setTheme }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   let user = null;
   try { user = JSON.parse(localStorage.getItem("user")); } catch { user = null; }
@@ -47,9 +64,14 @@ function Navbar({ theme, setTheme }) {
   const config = user ? (ROLE_CONFIG[user.role] || { emoji: "👤", color: "#6b7280", label: user.role, dashboard: "/" }) : null;
   const initial = user?.name?.charAt(0)?.toUpperCase() || "?";
 
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    closeMobileMenu();
     navigate("/login");
   };
 
@@ -97,7 +119,7 @@ function Navbar({ theme, setTheme }) {
           height: "100%", display: "flex", alignItems: "center",
           padding: "0 32px 0 20px", gap: "10px",
           clipPath: "polygon(0 0, 88% 0, 100% 100%, 0 100%)",
-          minWidth: "220px", flexShrink: 0, cursor: "pointer"
+          minWidth: "auto", flexShrink: 0, cursor: "pointer"
         }} onClick={() => navigate("/")}>
           <div style={{
             width: "36px", height: "36px", borderRadius: "10px",
@@ -105,7 +127,7 @@ function Navbar({ theme, setTheme }) {
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: "20px", flexShrink: 0
           }}>🍲</div>
-          <div>
+          <div style={{ display: "none" }} className="brand-text">
             <div style={{ fontSize: "14px", fontWeight: "700", color: "#fff", fontFamily: "Syne, sans-serif", lineHeight: 1.2 }}>
               Food Donation
             </div>
@@ -130,14 +152,12 @@ function Navbar({ theme, setTheme }) {
         </div>
 
         {/* ── RIGHT: Actions ── */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "0 20px", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "0 20px", flexShrink: 0 }} className="nav-right">
 
           {/* Theme Toggle */}
           <div className="nav-icon-btn" onClick={toggleTheme}>
             {theme === "light" ? "🌙" : "☀️"}
           </div>
-
-
 
           {/* Divider */}
           <div style={{ width: "1px", height: "22px", background: "rgba(255,255,255,0.08)", flexShrink: 0 }} />
@@ -227,10 +247,110 @@ function Navbar({ theme, setTheme }) {
               </Link>
             </>
           )}
+
+          {/* Hamburger Menu Button */}
+          <button 
+            className={`hamburger-btn ${mobileMenuOpen ? 'active' : ''}`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={{ color: "#fff", cursor: "pointer" }}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
       </nav>
 
+      {/* ── MOBILE MENU ── */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu active">
+          <div className="mobile-menu-content">
+            <MobileMenuLink to="/" onClick={closeMobileMenu}>🏠 Home</MobileMenuLink>
+            <MobileMenuLink to="/about" onClick={closeMobileMenu}>ℹ️ About</MobileMenuLink>
+            <MobileMenuLink to="/contact" onClick={closeMobileMenu}>📧 Contact</MobileMenuLink>
+            <MobileMenuLink to="/helpline" color="rgba(239,68,68,0.7)" onClick={closeMobileMenu}>🆘 Help</MobileMenuLink>
+            {user && <MobileMenuLink to="/feedback" color="rgba(45,212,191,0.75)" onClick={closeMobileMenu}>💬 Feedback</MobileMenuLink>}
+            {user && config && (
+              <MobileMenuLink to={config.dashboard} color={`${config.color}cc`} onClick={closeMobileMenu}>
+                {config.emoji} Dashboard
+              </MobileMenuLink>
+            )}
+            
+            <div className="mobile-menu-divider"></div>
+            
+            {user && (
+              <div className="mobile-menu-actions">
+                <div className="mobile-user-info" onClick={() => { navigate("/profile"); closeMobileMenu(); }}>
+                  <div style={{ fontSize: "12px", fontWeight: "600", marginBottom: "4px" }}>
+                    👤 {user.name}
+                  </div>
+                  <div style={{ fontSize: "11px", opacity: 0.7 }}>
+                    {config?.emoji} {config?.label}
+                  </div>
+                </div>
+                <button 
+                  onClick={logout}
+                  style={{
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(239,68,68,0.2)",
+                    background: "rgba(239,68,68,0.05)",
+                    color: "#ef4444",
+                    cursor: "pointer",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    fontFamily: "Syne, sans-serif",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  🚪 Logout
+                </button>
+              </div>
+            )}
 
+            {!user && (
+              <div className="mobile-menu-actions">
+                <Link to="/login" style={{ textDecoration: "none" }} onClick={closeMobileMenu}>
+                  <button style={{
+                    width: "100%",
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(13,148,136,0.2)",
+                    background: "rgba(13,148,136,0.05)",
+                    color: "#0d9488",
+                    cursor: "pointer",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    fontFamily: "Syne, sans-serif",
+                    transition: "all 0.2s ease",
+                  }}>
+                    🔐 Login
+                  </button>
+                </Link>
+                <Link to="/register" style={{ textDecoration: "none" }} onClick={closeMobileMenu}>
+                  <button style={{
+                    width: "100%",
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: "none",
+                    background: "linear-gradient(135deg, #0d9488, #14b8a6)",
+                    color: "#fff",
+                    cursor: "pointer",
+                    fontSize: "13px",
+                    fontWeight: "700",
+                    fontFamily: "Syne, sans-serif",
+                    marginTop: "8px",
+                    transition: "all 0.2s ease",
+                  }}>
+                    ✅ Register
+                  </button>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

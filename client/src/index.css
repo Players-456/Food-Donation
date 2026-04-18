@@ -1,6 +1,20 @@
 /* index.css — Base browser reset & font setup */
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
+/* ─────────────────────────────────────────── */
+/* MOBILE-FIRST RESPONSIVE FOUNDATION         */
+/* ─────────────────────────────────────────── */
+
+html {
+  /* Enable smooth scrolling for better UX */
+  scroll-behavior: smooth;
+  /* Base font size for responsive scaling */
+  font-size: 14px;
+  /* Prevent font size adjustment on device rotation */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -8,12 +22,19 @@
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 body {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  /* Ensure proper viewport height on mobile */
+  min-height: 100vh;
+  /* Smooth transitions between orientation changes */
+  transition: width 0.3s ease;
 }
 
 code {
@@ -23,8 +44,144 @@ code {
 img, video {
   max-width: 100%;
   display: block;
+  /* Prevent layout shift */
+  height: auto;
 }
 
 button, input, select, textarea {
   font-family: inherit;
+  /* Prevent font size issues on mobile */
+  font-size: inherit;
+}
+
+/* ─────────────────────────────────────────── */
+/* MOBILE-SPECIFIC OPTIMIZATIONS              */
+/* ─────────────────────────────────────────── */
+
+/* iOS Safari specific fixes */
+input, textarea, select, button {
+  /* Prevent zoom on focus (iOS) */
+  font-size: 16px;
+}
+
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"] {
+  font-size: 16px;
+  padding: 10px;
+}
+
+/* Fix for iOS Safari input appearance */
+input, textarea, select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 8px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
+/* Remove default button styling on mobile */
+button {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Ensure proper touch targets on mobile (min 44x44px) */
+button, a[role="button"], input[type="button"], input[type="submit"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Fix for textarea resizing on mobile */
+textarea {
+  resize: vertical;
+  max-width: 100%;
+  min-height: 44px;
+}
+
+/* Prevent zoom on input focus */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  /* Better spacing for mobile forms */
+  form {
+    margin: 0;
+    padding: 0;
+  }
+
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Ensure full viewport width on mobile */
+  #root {
+    width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+/* ─────────────────────────────────────────── */
+/* UTILITY CLASSES FOR RESPONSIVE DESIGN      */
+/* ─────────────────────────────────────────── */
+
+/* Container queries support */
+@supports (container-type: inline-size) {
+  main {
+    container-type: inline-size;
+  }
+}
+
+/* Responsive text utilities */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .show-mobile {
+    display: none !important;
+  }
+}
+
+/* Responsive spacing utilities */
+@media (max-width: 480px) {
+  .p-responsive {
+    padding: 12px !important;
+  }
+
+  .m-responsive {
+    margin: 8px !important;
+  }
+}
+
+/* Prevent layout shift on scrollbar appearance */
+html {
+  scrollbar-gutter: stable;
 }

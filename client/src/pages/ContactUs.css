@@ -278,9 +278,146 @@ body.dark .contact-info { color: #4b5563; }
 }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 580px) {
+@media (max-width: 768px) {
+  .contact-page {
+    padding: 40px 16px;
+    min-height: auto;
+  }
+
+  .contact-page::before {
+    width: 300px;
+    height: 300px;
+    top: -80px;
+    left: -80px;
+  }
+
+  .contact-page::after {
+    width: 250px;
+    height: 250px;
+    bottom: -60px;
+    right: -60px;
+  }
+
   .contact-card {
     padding: 36px 28px;
     border-radius: 24px;
+    max-width: 90%;
+  }
+
+  .contact-card h2 {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+  }
+
+  .contact-card input,
+  .contact-card textarea {
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .contact-card button {
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page {
+    padding: 30px 12px;
+    min-height: auto;
+  }
+
+  .contact-page::before {
+    width: 200px;
+    height: 200px;
+    top: -60px;
+    left: -60px;
+    animation: floatGlow 6s ease-in-out infinite;
+  }
+
+  .contact-page::after {
+    width: 180px;
+    height: 180px;
+    bottom: -50px;
+    right: -50px;
+    animation: floatGlow 8s ease-in-out 2s infinite reverse;
+  }
+
+  .contact-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 24px 16px;
+    border-radius: 18px;
+  }
+
+  .contact-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+
+  .contact-subtitle {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .contact-card form {
+    gap: 10px;
+  }
+
+  .contact-card input,
+  .contact-card textarea {
+    padding: 11px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border-width: 1px;
+  }
+
+  .contact-card button {
+    padding: 11px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .contact-info {
+    font-size: 12px;
+    margin-top: 16px;
+  }
+
+  .status-msg {
+    font-size: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .contact-page {
+    padding: 20px 8px;
+  }
+
+  .contact-card {
+    padding: 18px 12px;
+    border-radius: 14px;
+  }
+
+  .contact-card h2 {
+    font-size: 1.1rem;
+  }
+
+  .contact-card input,
+  .contact-card textarea {
+    font-size: 16px;
+    padding: 10px 10px;
+  }
+
+  .contact-card button {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .contact-subtitle {
+    font-size: 11px;
   }
 }
