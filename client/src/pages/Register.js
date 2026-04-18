@@ -1,7 +1,7 @@
 // client/src/pages/Register.js
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import API from "../services/api";
 
 const ROLES = [
   { value: "donor",     label: "Donor",     emoji: "🍱", desc: "Donate surplus food",      color: "#0d9488" },
@@ -38,7 +38,7 @@ function Register() {
     setError("");
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/register", { ...formData, role });
+      await API.post("/auth/register", { ...formData, role });
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Try again.");

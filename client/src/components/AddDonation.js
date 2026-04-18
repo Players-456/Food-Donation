@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useState } from "react";
+import API from "../services/api";
 
 function AddDonation() {
   const [foodName, setFoodName] = useState("");
@@ -19,12 +19,11 @@ function AddDonation() {
     formData.append("locationImage", locationImage);
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/donations/add",
+      await API.post(
+        "/donations/add",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "multipart/form-data"
           }
         }

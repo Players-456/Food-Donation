@@ -1,6 +1,6 @@
 // src/pages/ContactUs.js
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 
 function ContactUs() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -14,7 +14,7 @@ function ContactUs() {
     setLoading(true);
     setStatus("");
     try {
-      await axios.post("http://localhost:5000/api/contact", form);
+      await API.post("/contact", form);
       setStatus("success");
       setForm({ name: "", email: "", message: "" });
     } catch {
