@@ -12,36 +12,54 @@ const donationRoutes = require("./routes/donationRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 
-// ✅ CORS CONFIGURATION - Production Ready
+// ✅ ALLOWED ORIGINS
 const allowedOrigins = [
-  "http://localhost:3000",      // Development
-  "http://localhost:5000",      // Local API
-  "https://food-donation-client.vercel.app",  // Production Frontend (change to your Vercel URL)
-  process.env.FRONTEND_URL      // Environment variable for Frontend URL
-].filter(Boolean); // Remove undefined values
+  "http://localhost:3000",
+  "http://localhost:5000",
+  "https://food-donation-client.vercel.app",
+  process.env.FRONTEND_URL
+].filter(Boolean);
 
+// ✅ CORS CONFIGURATION (FIXED)
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+    console.log("🌍 Incoming Origin:", origin); // DEBUG
+
+    // ✅ Allow requests with no origin (Postman, mobile apps)
+    if (!origin) {
+      return callback(null, true);
     }
+
+    // ✅ Allow exact matches
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // ✅ Allow ALL Vercel deployments (preview + production)
+    if (origin.includes("vercel.app")) {
+      return callback(null, true);
+    }
+
+    // ❌ Block everything else
+    console.log("❌ Blocked by CORS:", origin);
+    return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200
 };
 
-// ✅ MIDDLEWARES
+// ✅ APPLY MIDDLEWARES
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ SERVE UPLOADS FOLDER - Using absolute path for reliability
+// ✅ SERVE UPLOADS
 const uploadsPath = path.join(__dirname, "uploads");
 app.use("/uploads", express.static(uploadsPath));
 
-// ✅ ROUTES (VERY IMPORTANT — you missed these earlier)
+// ✅ ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/feedback", feedbackRoutes);
@@ -49,26 +67,27 @@ app.use("/api/contact", contactRoutes);
 
 // ✅ TEST ROUTE
 app.get("/", (req, res) => {
-  res.send("Smart Food Donation Backend Running");
+  res.send("Smart Food Donation Backend Running 🚀");
 });
 
-// ✅ MONGODB CONNECTION
+// ✅ CHECK ENV VARIABLES
 if (!process.env.MONGO_URI) {
-  console.error("❌ ERROR: MONGO_URI environment variable is not set. Please check your .env file.");
+  console.error("❌ MONGO_URI missing in .env");
   process.exit(1);
 }
 
+// ✅ CONNECT MONGODB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected Successfully"))
   .catch(err => {
-    console.error("❌ MongoDB Connection Error:", err.message);
+    console.error("❌ MongoDB Error:", err.message);
     process.exit(1);
   });
 
+// ✅ START SERVER
 const PORT = process.env.PORT || 5000;
 
-// ✅ START SERVER
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
